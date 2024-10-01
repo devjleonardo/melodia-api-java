@@ -155,3 +155,19 @@ CREATE TABLE usuario_configuracoes_privacidade (
     configuracao_privacidade VARCHAR(255),
     CONSTRAINT fk_usuario_privacidade FOREIGN KEY (usuario_id) REFERENCES usuario(id)
 );
+
+CREATE TABLE artista_ranking (
+    id BIGSERIAL PRIMARY KEY,
+    pontuacao DOUBLE PRECISION NOT NULL,
+    artista_id BIGINT NOT NULL UNIQUE,
+    CONSTRAINT fk_artista_ranking FOREIGN KEY (artista_id) REFERENCES artista(id)
+);
+
+CREATE TABLE usuario_artista_ranking (
+    id BIGSERIAL PRIMARY KEY,
+    pontuacao DOUBLE PRECISION NOT NULL,
+    usuario_id BIGINT NOT NULL,
+    artista_id BIGINT NOT NULL,
+    CONSTRAINT fk_usuario_artista FOREIGN KEY (usuario_id) REFERENCES usuario(id),
+    CONSTRAINT fk_artista_usuario_artista FOREIGN KEY (artista_id) REFERENCES artista(id)
+);

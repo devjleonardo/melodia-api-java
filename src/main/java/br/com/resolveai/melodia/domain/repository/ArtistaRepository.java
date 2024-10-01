@@ -16,7 +16,7 @@ public interface ArtistaRepository extends JpaRepository<Artista, Long> {
 
     @Query("""
     SELECT a
-    FROM Artista a
+        FROM Artista a
     WHERE LOWER(a.nome) LIKE LOWER(CONCAT('%', :nome, '%'))
     """)
     List<Artista> findByNomeAproximado(String nome);

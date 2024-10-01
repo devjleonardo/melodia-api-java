@@ -21,6 +21,7 @@ public class HistoricoAcaoService {
     private final PlaylistService playlistService;
     private final HistoricoMusicaService historicoMusicaService;
     private final HistoricoPlaylistService historicoPlaylistService;
+    private final RankingArtistasService rankingArtistasService;
 
     @Transactional
     public void registrarAcao(Long usuarioId, Long itemId, String tipoAcao) {
@@ -58,6 +59,10 @@ public class HistoricoAcaoService {
 
             historicoAcaoRepository.save(novoHistorico);
         }
+
+        Long artistaId = musica.getArtista().getId();
+        rankingArtistasService.atualizarRankingGeralDoArtista(artistaId);
+        rankingArtistasService.atualizarRankingDoArtistaDoUsuario(usuarioId, artistaId);
     }
 
     private void registrarPlaylistOuvida(Long usuarioId, Long playlistId) {
@@ -81,5 +86,4 @@ public class HistoricoAcaoService {
             historicoAcaoRepository.save(novoHistorico);
         }
     }
-
 }

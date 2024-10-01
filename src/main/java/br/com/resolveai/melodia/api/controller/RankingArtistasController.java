@@ -3,7 +3,8 @@ package br.com.resolveai.melodia.api.controller;
 import br.com.resolveai.melodia.api.dto.response.ArtistaRankingDTO;
 import br.com.resolveai.melodia.api.mapper.ArtistaRankingMapper;
 import br.com.resolveai.melodia.core.util.ApiEndpoint;
-import br.com.resolveai.melodia.domain.projecao.ArtistaRankingProjecao;
+import br.com.resolveai.melodia.domain.model.ArtistaRanking;
+import br.com.resolveai.melodia.domain.model.UsuarioArtistaRanking;
 import br.com.resolveai.melodia.domain.service.RankingArtistasService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,27 +28,26 @@ public class RankingArtistasController {
 
     @GetMapping("/geral")
     public Page<ArtistaRankingDTO> getRankingGeralArtistas(@PageableDefault Pageable pageable) {
-        Page<ArtistaRankingProjecao> artistasRankeados = rankingArtistasService.obterRankingGeralDosArtistas(pageable);
+        Page<ArtistaRanking> artistasRankeados = rankingArtistasService.obterRankingGeralDosArtistas(pageable);
 
-        List<ArtistaRankingDTO> dtoList = artistasRankeados.stream()
-            .map(artistaRankingMapper::converterProjecaoParaRankingDTO)
+        List<ArtistaRankingDTO> artistasRankeadosDTO = artistasRankeados.stream()
+            .map(artistaRankingMapper::converterArtistaRankingParaDTO)
             .toList();
 
-        return new PageImpl<>(dtoList, pageable, artistasRankeados.getTotalElements());
+        return new PageImpl<>(artistasRankeadosDTO, pageable, artistasRankeados.getTotalElements());
     }
 
     @GetMapping("/usuario/{usuarioId}")
     public Page<ArtistaRankingDTO> getRankingArtistasPorUsuario(
-            @PathVariable Long usuarioId,
-            @PageableDefault Pageable pageable) {
-        Page<ArtistaRankingProjecao> artistasRankeados =
-            rankingArtistasService.obterRankingDeArtistasPorUsuario(usuarioId, pageable);
+        @PathVariable Long usuarioId,
+        @PageableDefault Pageable pageable) {
+        Page<UsuarioArtistaRanking> artistasRankeados = rankingArtistasService.obterRankingDeArtistasPorUsuario(usuarioId, pageable);
 
-        List<ArtistaRankingDTO> dtoList = artistasRankeados.stream()
-            .map(artistaRankingMapper::converterProjecaoParaRankingDTO)
+        List<ArtistaRankingDTO> artistaRankingDTO = artistasRankeados.stream()
+            .map(artistaRankingMapper::converterUsuarioArtistaRankingParaDTO)
             .toList();
 
-        return new PageImpl<>(dtoList, pageable, artistasRankeados.getTotalElements());
+        return new PageImpl<>(artistaRankingDTO, pageable, artistasRankeados.getTotalElements());
     }
 
 }
